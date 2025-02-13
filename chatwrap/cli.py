@@ -1,8 +1,8 @@
 # Description: Command line interface for chatwrap
 
 from argparse import ArgumentParser
-from streaming_callback import StreamingCallback
-from client import LlmClient
+from chatwrap.streaming_callback import StreamingCallback
+from chatwrap.client import LlmClient
 
 LLM_SERVER_URL = 'http://127.0.0.1:1234'
 

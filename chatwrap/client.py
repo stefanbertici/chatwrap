@@ -3,7 +3,7 @@
 
 import json
 from typing import Callable, Optional
-from logger import log_calls
+from chatwrap.logger import log_calls
 import requests
 
 class LlmClient:
