@@ -7,7 +7,7 @@ from chatwrap.client import LlmClient
 LLM_SERVER_URL = 'http://127.0.0.1:1234'
 
 def main(params):
-    client = LlmClient(LLM_SERVER_URL)
+    client = LlmClient(LLM_SERVER_URL, 'llama-3.2-3b-instruct')
 
     models = client.get_models()
     print(f'~ Hello, welcome to Chatwrap! These are the currently available models for use:{models}')

@@ -7,8 +7,9 @@ from chatwrap.logger import log_calls
 import requests
 
 class LlmClient:
-    def __init__(self, url):
+    def __init__(self, url, default_model):
         self.url = url
+        self.default_model = default_model
 
     @log_calls
     def get_models(self):
@@ -18,7 +19,7 @@ class LlmClient:
     def generate(self, prompt, model, temperature, max_tokens, stream, callback: Optional[Callable] = None):
         params = {
             'prompt': 'tell me a joke' if prompt in [None, ''] else prompt,
-            'model': 'hermes-3-llama-3.2-3b' if model in [None, ''] else model,
+            'model': self.default_model if model in [None, ''] else model,
             'temperature': 0.7 if temperature is None else temperature,
             'stream': False if stream is None else stream,
             'max_tokens': 250 if max_tokens is None else max_tokens,
