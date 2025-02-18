@@ -13,10 +13,14 @@ def main(params):
     print(f'~ Hello, welcome to Chatwrap! These are the currently available models for use:{models}')
 
     model = input('~ Please select a [model] from the list above or leave blank for default: ')
-    prompt = input('~ Please enter a [prompt] or leave blank for default: ')
-    
+    # prompt = input('~ Please enter a [prompt] or leave blank for default: ')
+
+    system_content = 'You are a helpful HR assistant. Your answers are concise.'
+    user_content = 'Extract and give me a list of the relevant skills for a Java developer position from the following text "Stefan Bertici, I know Python, Java 3 years experience". I only need a list of the skills.'
+
+
     callback = StreamingCallback() if params.stream is True else None
-    answer = client.generate(prompt, model, params.temperature, params.max_tokens, params.stream, callback)
+    answer = client.generate(system_content, user_content, model, params.temperature, params.max_tokens, params.stream, callback)
     print(f'~ LLM generated answer: {answer}')
 
 if __name__ == '__main__':

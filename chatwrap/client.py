@@ -16,13 +16,22 @@ class LlmClient:
         response = requests.get(f'{self.url}/v1/models')
         return [item['id'] for item in response.json().get('data')] 
 
-    def generate(self, prompt, model, temperature, max_tokens, stream, callback: Optional[Callable] = None):
+    def generate(self, system_content, user_content, model, temperature, max_tokens, stream, callback: Optional[Callable] = None):
         params = {
-            'prompt': 'tell me a joke' if prompt in [None, ''] else prompt,
+            "messages": [
+                {
+                    "role": "system",
+                    "content": system_content
+                },
+                {
+                    "role": "user",
+                    "content": user_content
+                }
+            ],
             'model': self.default_model if model in [None, ''] else model,
             'temperature': 0.7 if temperature is None else temperature,
             'stream': False if stream is None else stream,
-            'max_tokens': 250 if max_tokens is None else max_tokens,
+            'max_tokens': -1 if max_tokens is None else max_tokens,
             "stop": '\n'
         }
 
@@ -33,15 +42,15 @@ class LlmClient:
 
     @log_calls
     def _handle_response(self, params):
-        response = requests.post(f'{self.url}/api/v0/completions', json=params)
-        return response.json().get('choices')[0].get('text')
+        response = requests.post(f'{self.url}/api/v0/chat/completions', json=params)
+        return response.json().get('choices')[0].get('message').get('content')
 
     @log_calls
     def _handle_streaming_response(self, params, callback):
         full_response = []
         params['stream'] = True
         
-        with requests.post(f'{self.url}/api/v0/completions', json=params, stream=True) as response:
+        with requests.post(f'{self.url}/api/v0/chat/completions', json=params, stream=True) as response:
             print('--------------------------------------')
 
             for line in response.iter_lines():
@@ -59,7 +68,7 @@ class LlmClient:
                     try:
                         chunk = json.loads(decoded_line)  # Parse the JSON
                         if chunk.get('choices'):
-                            token = chunk['choices'][0].get('text', '')
+                            token = chunk['choices'][0].get('delta').get('content', '')
                             full_response.append(token)
                             callback(token)  # Stream the token
                     except json.JSONDecodeError:

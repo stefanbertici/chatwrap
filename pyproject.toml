@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "chatwrap"
-version = "0.4.0"
+version = "0.5.0"
 description = "A Python project for chat wrapping functionality"
 authors = ["Stefan Bertici <stefan.bertici@example.com>"]
 license = "MIT"
