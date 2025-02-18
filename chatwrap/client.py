@@ -31,8 +31,7 @@ class LlmClient:
             'model': self.default_model if model in [None, ''] else model,
             'temperature': 0.7 if temperature is None else temperature,
             'stream': False if stream is None else stream,
-            'max_tokens': -1 if max_tokens is None else max_tokens,
-            "stop": '\n'
+            'max_tokens': -1 if max_tokens is None else max_tokens
         }
 
         if stream and callback:
